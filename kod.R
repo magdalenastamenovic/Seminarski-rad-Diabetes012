@@ -64,7 +64,7 @@ setwd(radni_direktorijum)
 cat("Radni direktorijum je postavljen na:", getwd(), "\n")
 
 data <- read.csv("diabetes_dataset.csv")
-cat("Skup podataka mozete pogledati u promnljivoj data koja se automatski otvorila u radnom okruzenju", View(data))
+cat("Skup podataka mozete pogledati u promenljivoj data koja se automatski otvorila u radnom okruzenju", View(data))
 #Osnovne informacije o skupu####
 dimenzije_skupa = dim(data)
 cat("Broj featura skupa: ", dimenzije_skupa[2], "\n", "Broj opservacija: ", dimenzije_skupa[1])
