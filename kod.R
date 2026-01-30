@@ -833,7 +833,16 @@ ggplot(data, aes(x = Diabetes_012, fill = NoDocbcCost)) +
   labs(title = "Distribucija klasa NoDocbcCost u odnosu na tipove Diabetes_012",
        x = NULL,
        y = "Broj opservacija",
-       fill = "Imao mogućnost")
+       fill = "Bez mogućnosti odlaska")
+
+ggplot(data, aes(x = Diabetes_012, y = as.numeric(GenHlth), fill = Diabetes_012)) +
+  geom_boxplot() +
+  scale_fill_manual(values=colorS)+
+  labs(title = "Distribucija ocena zdravlja po tipovima dijabetesa",
+       y = "Ocena zdravlja (1-Odlično, 5-Loše)",
+       x = "Dijabetes status")
+
+
 
 data %>%
   count(Diabetes_012, NoDocbcCost) %>%
@@ -895,6 +904,12 @@ ggplot(data, aes(x = MentHlth, fill = Diabetes_012)) +
   labs(title = "Histogram MentHlth u odnosu na Diabetes_012",
        y = "Broj opservacija",
        fill = "Dijabetes")
+
+ggplot(data, aes(x = MentHlth, color = Diabetes_012, fill = Diabetes_012)) +
+  geom_density(alpha = 0.2) +
+  scale_fill_manual(values=colorS)+
+  labs(title = "Gustina MentHlth po tipu dijabetesa")
+
 anova_test(data$MentHlth,data$Diabetes_012)
 tukey_fun(data$MentHlth,data$Diabetes_012)
 
@@ -910,6 +925,13 @@ ggplot(data, aes(x = PhysHlth, fill = Diabetes_012)) +
   labs(title = "Histogram PhysHlth u odnosu na Diabetes_012",
        y = "Broj opservacija",
        fill = "Dijabetes")
+
+ggplot(data, aes(x = PhysHlth, color = Diabetes_012, fill = Diabetes_012)) +
+  geom_density(alpha = 0.2) +
+  scale_fill_manual(values=colorS)+
+  labs(title = "Gustina PhysHlth po tipu dijabetesa")
+
+
 anova_test(data$PhysHlth,data$Diabetes_012)
 tukey_fun(data$PhysHlth,data$Diabetes_012)
 
