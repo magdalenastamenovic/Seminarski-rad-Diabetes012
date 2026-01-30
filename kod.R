@@ -333,19 +333,20 @@ ggplot(data, aes(x = Diabetes_012, fill = HighBP))  +
   ) +
   theme(legend.position="bottom")
 
-ggplot(data %>% count(Diabetes_012, HighBP), 
-       aes(x = Diabetes_012, y = HighBP, fill = n)) +
+data %>%
+  count(Diabetes_012, HighBP) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = HighBP, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija HighBP po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "HighBP",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 chi_sq_test(data$HighBP, data$Diabetes_012)
 cramer_v(data$HighBP, data$Diabetes_012)
@@ -366,20 +367,21 @@ ggplot(data, aes(x = Diabetes_012, fill = HighChol))  +
   )+
   theme(legend.position="bottom")
 
-ggplot(data %>% count(Diabetes_012, HighChol), 
-       aes(x = Diabetes_012, y = HighChol, fill = n)) +
+
+data %>%
+  count(Diabetes_012, HighChol) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = HighChol, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija HighChol po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "HighChol",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
-
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
 chi_sq_test(data$HighChol, data$Diabetes_012)
 cramer_v(data$HighChol, data$Diabetes_012)
 
@@ -398,19 +400,20 @@ ggplot(data, aes(x = Diabetes_012, fill = CholCheck))  +
   ) +
   theme(legend.position="bottom")
 
-ggplot(data %>% count(Diabetes_012, CholCheck), 
-       aes(x = Diabetes_012, y = CholCheck, fill = n)) +
+data %>%
+  count(Diabetes_012, CholCheck) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = CholCheck, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija CholCheck po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "CholCheck",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 chi_sq_test(data$CholCheck, data$Diabetes_012)
 cramer_v(data$CholCheck, data$Diabetes_012)
@@ -572,20 +575,20 @@ ggplot(data, aes(x = Diabetes_012, fill = Smoker))  +
   )+
   theme(legend.position = "bottom")
 
-ggplot(data %>% count(Diabetes_012, Smoker), 
-       aes(x = Diabetes_012, y = Smoker, fill = n)) +
+data %>%
+  count(Diabetes_012, Smoker) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = Smoker, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija Smoker po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "Smoker",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
-  
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2]) 
 
 chi_sq_test(data$Smoker, data$Diabetes_012)
 cramer_v(data$Smoker, data$Diabetes_012)
@@ -604,20 +607,20 @@ ggplot(data, aes(x = Diabetes_012, fill = Stroke))  +
     vjust = -0.3
   )+
   theme(legend.position = "bottom")
-
-ggplot(data %>% count(Diabetes_012, Stroke), 
-       aes(x = Diabetes_012, y = Stroke, fill = n)) +
+data %>%
+  count(Diabetes_012, Stroke) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = Stroke, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija Stroke po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "Stroke",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2]) 
 
 chi_sq_test(data$Stroke, data$Diabetes_012)
 cramer_v(data$Stroke, data$Diabetes_012)
@@ -638,19 +641,20 @@ ggplot(data, aes(x = Diabetes_012, fill = HeartDiseaseorAttack))  +
   )+
   theme(legend.position = "bottom")
 
-ggplot(data %>% count(Diabetes_012, HeartDiseaseorAttack), 
-       aes(x = Diabetes_012, y = HeartDiseaseorAttack, fill = n)) +
+data %>%
+  count(Diabetes_012, HeartDiseaseorAttack) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = HeartDiseaseorAttack, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija HeartDiseaseorAttack po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "HeartDiseaseorAttack",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2]) 
 
 chi_sq_test(data$HeartDiseaseorAttack , data$Diabetes_012)
 cramer_v(data$HeartDiseaseorAttack , data$Diabetes_012)
@@ -670,19 +674,20 @@ ggplot(data, aes(x = Diabetes_012, fill = PhysActivity))  +
   )+
   theme(legend.position = "bottom")
 
-ggplot(data %>% count(Diabetes_012, PhysActivity), 
-       aes(x = Diabetes_012, y = PhysActivity, fill = n)) +
+data %>%
+  count(Diabetes_012, PhysActivity) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = PhysActivity, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija PhysActivity po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "PhysActivity",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2]) 
 
 chi_sq_test(data$PhysActivity , data$Diabetes_012)
 cramer_v(data$PhysActivity , data$Diabetes_012)
@@ -703,19 +708,22 @@ ggplot(data, aes(x = Diabetes_012, fill = Fruits))  +
   )+
   theme(legend.position = "bottom")
 
-ggplot(data %>% count(Diabetes_012, Fruits), 
-       aes(x = Diabetes_012, y = Fruits, fill = n)) +
+data %>%
+  count(Diabetes_012, Fruits) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = Fruits, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija Fruits po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "Fruits",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
+
+
 chi_sq_test(data$Fruits , data$Diabetes_012)
 cramer_v(data$Fruits , data$Diabetes_012)
 
@@ -734,19 +742,21 @@ ggplot(data, aes(x = Diabetes_012, fill = Veggies))  +
   )+
   theme(legend.position = "bottom")
 
-ggplot(data %>% count(Diabetes_012, Veggies), 
-       aes(x = Diabetes_012, y = Veggies, fill = n)) +
+data %>%
+  count(Diabetes_012, Veggies) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = Veggies, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija Veggies po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "Veggies",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$Veggies, data$Diabetes_012)
 cramer_v(data$Veggies, data$Diabetes_012)
 
@@ -762,17 +772,22 @@ ggplot(data, aes(x = Diabetes_012, fill = HvyAlcoholConsump)) +
        x = NULL,
        y = "Broj ispitanika",
        fill ="Konzumira dosta alkohola")
-ggplot(data %>% count(Diabetes_012, HvyAlcoholConsump), 
-       aes(x = Diabetes_012, y = HvyAlcoholConsump, fill = n)) +
+
+data %>%
+  count(Diabetes_012, HvyAlcoholConsump) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = HvyAlcoholConsump, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija konzumacije alkohola po tipovima dijabetesa",
+    title = "Distribucija kategorija HvyAlcoholConsump po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "HvyAlcoholConsump",
-    fill = "Broj opservacija"
-  )+
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$HvyAlcoholConsump, data$Diabetes_012)
 cramer_v(data$HvyAlcoholConsump, data$Diabetes_012)
 
@@ -788,19 +803,25 @@ ggplot(data, aes(x = Diabetes_012, fill = AnyHealthcare)) +
        x = NULL,
        y = "Broj opservacija",
        fill = "Ima z. negu")
-ggplot(data %>% count(Diabetes_012, AnyHealthcare), 
-       aes(x = Diabetes_012, y = AnyHealthcare, fill = n)) +
+
+data %>%
+  count(Diabetes_012, AnyHealthcare) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = AnyHealthcare, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija klasa AnyHealthcare po tipovima Diabetes_012",
+    title = "Distribucija kategorija AnyHealthcare po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "AnyHealthcare",
-    fill = "Broj opservacija"
-  )+
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$AnyHealthcare, data$Diabetes_012)
 cramer_v(data$AnyHealthcare, data$Diabetes_012)
+
 ggplot(data, aes(x = Diabetes_012, fill = NoDocbcCost)) +
   geom_bar(position = "dodge") +
   geom_text(stat = "count", 
@@ -813,19 +834,25 @@ ggplot(data, aes(x = Diabetes_012, fill = NoDocbcCost)) +
        x = NULL,
        y = "Broj opservacija",
        fill = "Imao mogućnost")
-ggplot(data %>% count(Diabetes_012, NoDocbcCost), 
-       aes(x = Diabetes_012, y = NoDocbcCost, fill = n)) +
+
+data %>%
+  count(Diabetes_012, NoDocbcCost) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = NoDocbcCost, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija klasa NoDocbcCost u odnosu na tipove Diabetes_012",
+    title = "Distribucija kategorija NoDocbcCost po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "NoDocbcCost",
-    fill = "Broj opservacija"
-  )+
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$NoDocbcCost, data$Diabetes_012)
 cramer_v(data$NoDocbcCost, data$Diabetes_012)
+
 ggplot(data, aes(x = Diabetes_012, fill = GenHlth)) +
   geom_bar(position = "dodge") +
   geom_text(stat = "count", 
@@ -838,17 +865,22 @@ ggplot(data, aes(x = Diabetes_012, fill = GenHlth)) +
        x = NULL,
        y = "Broj opservacija",
        fill = "Ocena")
-ggplot(data %>% count(Diabetes_012, GenHlth), 
-       aes(x = Diabetes_012, y = GenHlth, fill = n)) +
+
+data %>%
+  count(Diabetes_012, GenHlth) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = GenHlth, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija klasa GenHlth u odnosu na tipove Diabetes_012",
+    title = "Distribucija kategorija GenHlth po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "GenHlth",
-    fill = "Broj opservacija"
-  )+
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$GenHlth, data$Diabetes_012)
 cramer_v(data$GenHlth, data$Diabetes_012)
 
@@ -893,15 +925,23 @@ ggplot(data, aes(x = Diabetes_012, fill =DiffWalk )) +
        x = NULL,
        y = "Broj opservacija",
        fill = "Ima poteškoća")
-ggplot(data %>% count(Diabetes_012, DiffWalk), 
-       aes(x = Diabetes_012, y = DiffWalk, fill = n)) +
+
+
+data %>%
+  count(Diabetes_012, DiffWalk) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = DiffWalk, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija klasa DiffWalk u odnosu na tipove Diabetes_012",
-    fill = "Broj opservacija"
-  )+
+    title = "Distribucija kategorija DiffWalk po kategorijama Diabetes_012",
+    x = "Diabetes_012",
+    y = "DiffWalk",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$DiffWalk, data$Diabetes_012)
 cramer_v(data$DiffWalk, data$Diabetes_012)
 
@@ -917,14 +957,19 @@ ggplot(data, aes(x = Diabetes_012, fill =Sex )) +
        y = "Broj opservacija",
        fill = "Pol")
 
-ggplot(data %>% count(Diabetes_012, Sex), 
-       aes(x = Diabetes_012, y = Sex, fill = n)) +
+data %>%
+  count(Diabetes_012, Sex) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = Sex, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija polova u odnosu na tipove Diabetes_012",
-    fill = "Broj opservacija"
-  )+
+    title = "Distribucija kategorija Sex po kategorijama Diabetes_012",
+    x = "Diabetes_012",
+    y = "Sex",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 chi_sq_test(data$Diabetes_012,data$Sex)
@@ -957,15 +1002,22 @@ ggplot(data, aes(x = Diabetes_012, fill =Education )) +
        y = "Broj opservacija",
        fill = "Nivo obrazovanja")
 
-ggplot(data %>% count(Diabetes_012, Education), 
-       aes(x = Diabetes_012, y = Education, fill = n)) +
+data %>%
+  count(Diabetes_012, Education) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = Education, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija nivoa obrazovanja u odnosu na tipove Diabetes_012",
-    fill = "Broj opservacija"
-  )+
+    title = "Distribucija kategorija Education po kategorijama Diabetes_012",
+    x = "Diabetes_012",
+    y = "Education",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
+
 chi_sq_test(data$Diabetes_012,data$Education)
 cramer_v(data$Diabetes_012,data$Education)
 
@@ -982,14 +1034,20 @@ ggplot(data, aes(x = Diabetes_012, fill =Income )) +
   labs(title = "Distribucija nivoa primanja u odnosu na tipove Diabetes_012",
        y = "Broj opservacija",
        fill = "Primanja")
-ggplot(data %>% count(Diabetes_012, Income), 
-       aes(x = Diabetes_012, y = Income, fill = n)) +
+
+data %>%
+  count(Diabetes_012, Income) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = Income, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija visine primanja u odnosu na tipove Diabetes_012",
-    fill = "Broj opservacija"
-  )+
+    title = "Distribucija kategorija Income po kategorijama Diabetes_012",
+    x = "Diabetes_012",
+    y = "Income",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 chi_sq_test(data$Diabetes_012,data$Income)
@@ -1005,15 +1063,22 @@ ggplot(data, aes(x = Education, fill =Income )) +
   labs(title = "Distribucija nivoa primanja u odnosu na nivo obrazovanje",
        y = "Broj opservacija",
        fill = "Primanja")
-ggplot(data %>% count(Education, Income), 
-       aes(x = Education, y = Income, fill = n)) +
+
+data %>%
+  count(Education, Income) %>%
+  group_by(Education) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Education, y = Income, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija visine primanja u odnosu na tipove nivo obrazovanja",
-    fill = "Broj opservacija"
-  )+
+    x = "Education",
+    y = "Income",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$Education,data$Income)
 cramer_v(data$Education,data$Income)
 
@@ -1023,15 +1088,22 @@ ggplot(data, aes(x = CholCheck, fill =HighChol )) +
   labs(title = "Distribucija HighChol u odnosu na CholCheck",
        y = "Broj opservacija",
        fill = "Visok holesterol")
-ggplot(data %>% count(CholCheck,HighChol), 
-       aes(x = CholCheck, y = HighChol, fill = n)) +
+
+
+
+data %>%
+  count(CholCheck,HighChol) %>%
+  group_by(CholCheck) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = CholCheck, y = HighChol, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija HighChol u odnosu na CholCheck",
-    fill = "Broj opservacija"
-  )+
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$CholCheck,data$HighChol)
 cramer_v(data$CholCheck,data$HighChol)
 
@@ -1055,15 +1127,22 @@ ggplot(data, aes(x = HighBP, fill =HeartDiseaseorAttack )) +
   labs(title = "Distribucija pojave srčanih oboljenja u odnosu na hipertenziju",
        y = "Broj opservacija",
        fill = "Srčana oboljenja")
-ggplot(data %>% count(HighBP, HeartDiseaseorAttack), 
-       aes(x = HighBP, y =HeartDiseaseorAttack, fill = n)) +
+
+
+data %>%
+  count(HighBP, HeartDiseaseorAttack) %>%
+  group_by(HighBP) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = HighBP, y = HeartDiseaseorAttack, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija pojave srčanih oboljenja u odnosu na hipertenziju",
-    fill = "Broj opservacija"
-  )+
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
+
 chi_sq_test(data$HighBP,data$HeartDiseaseorAttack)
 cramer_v(data$HighBP,data$HeartDiseaseorAttack)
 
@@ -1087,15 +1166,20 @@ ggplot(data, aes(x = PhysActivity, fill =DiffWalk )) +
   labs(title = "Distribucija DiffWalk u odnosu na PhysActivity",
        y = "Broj opservacija",
        fill = "Ima poteškoća u hodanju")
-ggplot(data %>% count(PhysActivity, DiffWalk), 
-       aes(x = PhysActivity, y =DiffWalk, fill = n)) +
+
+data %>%
+  count(PhysActivity, DiffWalk) %>%
+  group_by(PhysActivity) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = PhysActivity, y = DiffWalk, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija DiffWalk u odnosu na PhysActivity",
-    fill = "Broj opservacija"
-  )+
+    title = "Distribucija pojave srčanih oboljenja u odnosu na hipertenziju",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$PhysActivity,data$DiffWalk)
 cramer_v(data$PhysActivity,data$DiffWalk)
 
@@ -1119,15 +1203,21 @@ ggplot(data, aes(x = Stroke, fill =HighChol )) +
   labs(title = "Distribucija HighChol u odnosu na Stroke",
        y = "Broj opservacija",
        fill = "Ima holesterol")
-ggplot(data %>% count(Stroke, HighChol), 
-       aes(x = Stroke, y =HighChol, fill = n)) +
+
+
+data %>%
+  count(Stroke, HighChol) %>%
+  group_by(Stroke) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Stroke, y = HighChol, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija HighChol u odnosu na Stroke",
-    fill = "Broj opservacija"
-  )+
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data$Stroke,data$HighChol)
 cramer_v(data$Stroke,data$HighChol)
 
@@ -1137,15 +1227,21 @@ ggplot(data, aes(x = HeartDiseaseorAttack, fill =HighChol )) +
   labs(title = "Distribucija HighChol u odnosu na HeartDisease",
        y = "Broj opservacija",
        fill = "Ima holesterol")
-ggplot(data %>% count(HeartDiseaseorAttack, HighChol), 
-       aes(x = HeartDiseaseorAttack, y =HighChol, fill = n)) +
+
+data %>%
+  count(HeartDiseaseorAttack, HighChol) %>%
+  group_by(HeartDiseaseorAttack) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = HeartDiseaseorAttack, y = HighChol, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija HighChol u odnosu na HeartDisease",
-    fill = "Broj opservacija"
-  )+
+    title = "Distribucija HighChol u odnosu na HeartDiseaseorAttack",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
+
 chi_sq_test(data$HeartDiseaseorAttack,data$HighChol)
 cramer_v(data$HeartDiseaseorAttack,data$HighChol)
 library(ggplot2)
@@ -1388,19 +1484,21 @@ ggplot(data_clean, aes(x = PhysHlthCat, fill = Diabetes_012 ))  +
   ) +
   theme(legend.position="bottom")
 
-ggplot(data_clean %>% count(Diabetes_012, PhysHlthCat), 
-       aes(x = Diabetes_012, y = PhysHlthCat, fill = n)) +
+
+data_clean %>%
+  count(Diabetes_012, PhysHlthCat) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = PhysHlthCat, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija PhysHlthCat po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "PhysHlthCat",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 chi_sq_test(data_clean$PhysHlthCat, data_clean$Diabetes_012)
 cramer_v(data_clean$PhysHlthCat, data_clean$Diabetes_012)
@@ -1420,19 +1518,22 @@ ggplot(data_clean, aes(x = MentHlthCat, fill = Diabetes_012 ))  +
   ) +
   theme(legend.position="bottom")
 
-ggplot(data_clean %>% count(Diabetes_012, MentHlthCat), 
-       aes(x = Diabetes_012, y = MentHlthCat, fill = n)) +
+
+data_clean %>%
+  count(Diabetes_012, MentHlthCat) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = MentHlthCat, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija MentHlthCat po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "MentHlthCat",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 
 chi_sq_test(data_clean$MentHlthCat, data_clean$Diabetes_012)
 cramer_v(data_clean$MentHlthCat, data_clean$Diabetes_012)
@@ -1451,19 +1552,20 @@ cramer_v(data_clean$MentHlthCat, data_clean$Diabetes_012)
   ) +
   theme(legend.position="bottom")
 
-ggplot(data_clean %>% count(Diabetes_012, EducationCat), 
-       aes(x = Diabetes_012, y = EducationCat, fill = n)) +
-  geom_tile() +
-  geom_text(aes(label = n)) +
-  labs(
-    title = "Distribucija kategorija EducationCat po kategorijama Diabetes_012",
-    x = "Diabetes_012",
-    y = "EducationCat",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+  data_clean %>%
+    count(Diabetes_012, EducationCat) %>%
+    group_by(Diabetes_012) %>%
+    mutate(percent = n / sum(n) * 100) %>%
+    ggplot(aes(x = Diabetes_012, y = EducationCat, fill = percent)) +
+    geom_tile() +
+    geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
+    labs(
+      title = "Distribucija kategorija EducationCat po kategorijama Diabetes_012",
+      x = "Diabetes_012",
+      y = "EducationCat",
+      fill = "Procenat (%)"
+    ) +
+    scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 chi_sq_test(data_clean$EducationCat, data_clean$Diabetes_012)
 cramer_v(data_clean$EducationCat, data_clean$Diabetes_012)
@@ -1475,15 +1577,22 @@ ggplot(data_clean, aes(x = Diabetes_012, fill =IncomeCat )) +
        y = "Broj opservacija",
        fill = "Nivo primanja")
 
-ggplot(data_clean %>% count(Diabetes_012, IncomeCat), 
-       aes(x = Diabetes_012, y = IncomeCat, fill = n)) +
+
+data_clean %>%
+  count(Diabetes_012, IncomeCat) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = IncomeCat, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
-    title = "Distribucija kategorija primanja u odnosu na tipove Diabetes_012",
-    fill = "Broj opservacija"
-  )+
+    title = "Distribucija kategorija IncomeCat po kategorijama Diabetes_012",
+    x = "Diabetes_012",
+    y = "IncomeCat",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 
 chi_sq_test(data_clean$IncomeCat, data_clean$Diabetes_012)
 cramer_v(data_clean$IncomeCat, data_clean$Diabetes_012)
@@ -1495,14 +1604,19 @@ ggplot(data_clean, aes(x = Diabetes_012, fill =AgeCat)) +
        y = "Broj opservacija",
        fill = "Starosna dob")
 
-ggplot(data_clean %>% count(Diabetes_012, AgeCat), 
-       aes(x = Diabetes_012, y = AgeCat, fill = n)) +
+data_clean %>%
+  count(Diabetes_012, AgeCat) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = AgeCat, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija starosne dobi u odnosu na tipove Diabetes_012",
-    fill = "Broj opservacija"
-  )+
+    x = "Diabetes_012",
+    y = "AgeCat",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 chi_sq_test(data_clean$AgeCat, data_clean$Diabetes_012)
@@ -1522,19 +1636,21 @@ cramer_v(data_clean$AgeCat, data_clean$Diabetes_012)
   ) +
   theme(legend.position="bottom")
 
-ggplot(data_clean %>% count(Diabetes_012, CardioRiskScore), 
-       aes(x = Diabetes_012, y = CardioRiskScore, fill = n)) +
-  geom_tile() +
-  geom_text(aes(label = n)) +
-  labs(
-    title = "Distribucija kategorija CardioRiskScore po kategorijama Diabetes_012",
-    x = "Diabetes_012",
-    y = "CardioRiskScore",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+  data_clean %>%
+    count(Diabetes_012, CardioRiskScore) %>%
+    group_by(Diabetes_012) %>%
+    mutate(percent = n / sum(n) * 100) %>%
+    ggplot(aes(x = Diabetes_012, y = CardioRiskScore, fill = percent)) +
+    geom_tile() +
+    geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
+    labs(
+      title = "Distribucija kategorija CardioRiskScore po kategorijama Diabetes_012",
+      x = "Diabetes_012",
+      y = "CardioRiskScore",
+      fill = "Procenat (%)"
+    ) +
+    scale_fill_gradient(low = colorS[1], high = colorS[2])
+  
 
 chi_sq_test(data_clean$CardioRiskScore, data_clean$Diabetes_012)
 cramer_v(data_clean$CardioRiskScore, data_clean$Diabetes_012)
@@ -1554,19 +1670,21 @@ ggplot(data_clean, aes(x = LifestyleRiskScore, fill = Diabetes_012 ))  +
   ) +
   theme(legend.position="bottom")
 
-ggplot(data_clean %>% count(Diabetes_012, LifestyleRiskScore), 
-       aes(x = Diabetes_012, y = LifestyleRiskScore, fill = n)) +
+data_clean %>%
+  count(Diabetes_012, LifestyleRiskScore) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = LifestyleRiskScore, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija LifestyleRiskScore po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "LifestyleRiskScore",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 
 chi_sq_test(data_clean$LifestyleRiskScore, data_clean$Diabetes_012)
 cramer_v(data_clean$LifestyleRiskScore, data_clean$Diabetes_012)
@@ -1585,6 +1703,21 @@ ggplot(data_clean, aes(x = HealthScore, fill = Diabetes_012 ))  +
     vjust = -0.3
   ) +
   theme(legend.position="bottom")
+
+data_clean %>%
+  count(Diabetes_012, HealthScore) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = HealthScore, fill = percent)) +
+  geom_tile() +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
+  labs(
+    title = "Distribucija kategorija HealthScore po kategorijama Diabetes_012",
+    x = "Diabetes_012",
+    y = "HealthScore",
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 ggplot(data_clean %>% count(Diabetes_012, HealthScore), 
        aes(x = Diabetes_012, y = HealthScore, fill = n)) +
@@ -1618,19 +1751,20 @@ ggplot(data_clean, aes(x = SocioEconomicStatus , fill = Diabetes_012 ))  +
   ) +
   theme(legend.position="bottom")
 
-ggplot(data_clean %>% count(Diabetes_012, SocioEconomicStatus), 
-       aes(x = Diabetes_012, y = SocioEconomicStatus, fill = n)) +
+data_clean %>%
+  count(Diabetes_012, SocioEconomicStatus) %>%
+  group_by(Diabetes_012) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Diabetes_012, y = SocioEconomicStatus, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija SocioEconomicStatus po kategorijama Diabetes_012",
     x = "Diabetes_012",
     y = "SocioEconomicStatus",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
 
 chi_sq_test(data_clean$SocioEconomicStatus, data_clean$Diabetes_012)
 cramer_v(data_clean$SocioEconomicStatus, data_clean$Diabetes_012)
@@ -1638,16 +1772,23 @@ cramer_v(data_clean$SocioEconomicStatus, data_clean$Diabetes_012)
 ggplot(data_clean, aes(x = EducationCat, fill =IncomeCat )) + 
   geom_bar(position = "dodge")+ scale_fill_manual(values = colorS) + 
   labs(title = "Distribucija nivoa primanja u odnosu na nivo obrazovanje", y = "Broj opservacija", 
-       fill = "Primanja") 
-ggplot(data_clean %>% count(EducationCat, IncomeCat),  
-       aes(x = EducationCat, y = IncomeCat, fill = n)) + 
-  geom_tile() + 
-  geom_text(aes(label = n)) + 
-  labs( 
-    title = "Distribucija visine primanja u odnosu na tipove nivo obrazovanja", 
-    fill = "Broj opservacija" 
-  )+ 
+       fill = "Primanja")
+
+data_clean %>%
+  count(EducationCat, IncomeCat) %>%
+  group_by(EducationCat) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = EducationCat, y = IncomeCat, fill = percent)) +
+  geom_tile() +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
+  labs(
+    title = "Distribucija visine primanja u odnosu na tipove nivo obrazovanja",
+    x = "EducationCat",
+    y = "IncomeCat",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 chi_sq_test(data_clean$EducationCat,data_clean$IncomeCat) 
 cramer_v(data_clean$EducationCat,data_clean$IncomeCat) 
 
@@ -1664,19 +1805,23 @@ ggplot(data_clean, aes(x = MentHlthCat, fill = Stroke ))  +
     vjust = -0.3
   ) +
   theme(legend.position="bottom")
-ggplot(data_clean %>% count(Stroke, MentHlthCat), 
-       aes(x = Stroke, y = MentHlthCat, fill = n)) +
+
+
+data_clean %>%
+  count(Stroke, MentHlthCat) %>%
+  group_by(Stroke) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Stroke, y = MentHlthCat, fill = percent)) +
   geom_tile() +
-  geom_text(aes(label = n)) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
   labs(
     title = "Distribucija kategorija MentHlthCat po kategorijama Stroke",
-    x = "Diabetes_012",
+    x = "Stroke",
     y = "MentHlthCat",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+    fill = "Procenat (%)"
+  ) +
+  scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 
 chi_sq_test(data_clean$MentHlthCat, data_clean$Stroke)
 cramer_v(data_clean$MentHlthCat, data_clean$Stroke)
@@ -1696,19 +1841,21 @@ cramer_v(data_clean$MentHlthCat, data_clean$Stroke)
   ) +
   theme(legend.position="bottom")
 
-ggplot(data_clean %>% count(DiffWalk, PhysHlthCat), 
-       aes(x = DiffWalk, y = PhysHlthCat, fill = n)) +
-  geom_tile() +
-  geom_text(aes(label = n)) +
-  labs(
-    title = "Distribucija kategorija PhysHlthCat po kategorijama Stroke",
-    x = "DiffWalk",
-    y = "PhysHlthCat",
-    fill = "Broj opservacija"
-    
-  )+
-  scale_fill_gradient(low = colorS[1], high = colorS[2]) +
-  theme(legend.position="bottom")
+  data_clean %>%
+    count(DiffWalk, PhysHlthCat) %>%
+    group_by(DiffWalk) %>%
+    mutate(percent = n / sum(n) * 100) %>%
+    ggplot(aes(x = DiffWalk, y = PhysHlthCat, fill = percent)) +
+    geom_tile() +
+    geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
+    labs(
+      title = "Distribucija kategorija PhysHlthCat po kategorijama DiffWalk",
+      x = "DiffWalk",
+      y = "PhysHlthCat",
+      fill = "Procenat (%)"
+    ) +
+    scale_fill_gradient(low = colorS[1], high = colorS[2])
+
 
 chi_sq_test(data_clean$PhysHlthCat, data_clean$DiffWalk)
 cramer_v(data_clean$PhysHlthCat, data_clean$DiffWalk)
@@ -1725,15 +1872,22 @@ ggplot(data_clean, aes(x = AgeCat, fill =HealthScore )) +
        
        fill = "Zdravstveno stanje")
 
-ggplot(data_clean %>% count(AgeCat, HealthScore),  
-       aes(x = AgeCat, y = HealthScore, fill = n)) + 
-  geom_tile() + 
-  geom_text(aes(label = n)) + 
-  labs( 
-    title = "Distribucija zdravstvenog stanja a u odnosu na starosnu grupu", 
-    fill = "Broj opservacija" 
-  )+ 
+data_clean %>%
+  count(AgeCat, HealthScore) %>%
+  group_by(AgeCat) %>%
+  mutate(percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = AgeCat, y = HealthScore, fill = percent)) +
+  geom_tile() +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), color = "white") +
+  labs(
+    title = "Distribucija zdravstvenog stanja a u odnosu na starosnu grupu",
+    x = "AgeCat",
+    y = "HealthScore",
+    fill = "Procenat (%)"
+  ) +
   scale_fill_gradient(low = colorS[1], high = colorS[2])
+
+
 chi_sq_test(data_clean$AgeCat,data_clean$HealthScore) 
 cramer_v(data_clean$AgeCat,data_clean$HealthScore) 
 
@@ -1909,7 +2063,7 @@ for(i in 1:k){
 mean_cv_error_cart <- mean(cv_error_cart)
 mean_cv_error_rf <- mean(cv_error_rf)
 
-# Možete napraviti tabelu sa svim rezultatima
+
 results_rf_cart <- data.frame(
   Model = c("CART", "Random Forest"),
   CV_Error = c(mean_cv_error_cart, mean_cv_error_rf)
