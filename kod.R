@@ -1024,6 +1024,19 @@ ggplot(data, aes(x = Diabetes_012, fill =Education )) +
        y = "Broj opservacija",
        fill = "Nivo obrazovanja")
 
+ggplot(data, aes(x = Diabetes_012, fill = Education)) +
+  geom_bar(position = "fill") +
+  geom_text(stat = "count", 
+            aes(label = scales::percent(after_stat(count) / ave(after_stat(count), after_stat(x), FUN = sum))),
+            position = position_fill(vjust = 0.5), 
+            size = 3) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = colorS) +
+  labs(title = "Relativni udeo nivoa obrazovanja po grupama Diabetes_012",
+       y = "Procenat u okviru grupe (%)",
+       x = "Status dijabetesa",
+       fill = "Nivo obrazovanja")
+
 data %>%
   count(Diabetes_012, Education) %>%
   group_by(Diabetes_012) %>%
