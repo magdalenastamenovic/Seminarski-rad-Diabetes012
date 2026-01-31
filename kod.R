@@ -2044,49 +2044,79 @@ dim(data_train_balanced)
 #Unakrsna validacija####
 
 set.seed(83762021)
+library(nnet)
+k = 10
+podskupovi = createFolds(data_train_balanced$Diabetes_012, k = k, list = TRUE, returnTrain = FALSE)
 
-model_1 = glm(
-  Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore +
-    LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat,
-  data = data_train_balanced,
-  family = binomial
-)
-
-cv_error_model1 = cv.glm(data_train_balanced, model_1, K = 10)$delta[1]
-
-model_2 = glm(
-  Diabetes_012 ~ BMI * HealthScore + Stroke + DiffWalk + CardioRiskScore +
-    LifestyleRiskScore + SocioEconomicStatus + AgeCat,
-  data = data_train_balanced,
-  family = binomial
-)
-cv_error_model2 = cv.glm(data_train_balanced, model_2, K = 10)$delta[1]
+cv_error_multinom_model1 = numeric(k)
+cv_error_multinom_model2 = numeric(k)
 
 stepen = 1:4
-cv_error_model3 = numeric(length(stepen))
+cv_error_multinom_model3_mean = numeric(length(stepen))
+cv_error_multinom_model4_mean = numeric(length(stepen))
 
-for (s in stepen) {
-  model <- glm(
-    Diabetes_012 ~ poly(BMI, s) + Stroke + DiffWalk + CardioRiskScore +
-      LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat,
-    data = data_train_balanced,
-    family = binomial
-  )
-  cv = cv.glm(data_train_balanced, model, K = 10)
-  cv_error_model3[s]  =  cv$delta[1]
+cv_error_cart = numeric(k)
+cv_error_rf = numeric(k)
+
+for(i in 1:k){
+  test_idx = podskupovi[[i]]
+  train_idx = setdiff(1:nrow(data_train_balanced), test_idx)
+
+  model_multinom = multinom(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore +
+                               LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat,
+                             data = data_train_balanced[train_idx, ], trace = FALSE)
+  
+  preds = predict(model_multinom, newdata = data_train_balanced[test_idx, ])
+  cv_error_multinom_model1[i] = mean(preds != data_train_balanced$Diabetes_012[test_idx])
 }
 
-cv_error_model4 = numeric(length(stepen))
-for (s in stepen) {
-  model <- glm(
-    Diabetes_012 ~ poly(BMI, s)*HealthScore + Stroke + DiffWalk + CardioRiskScore +
-      LifestyleRiskScore  + SocioEconomicStatus + AgeCat,
-    data = data_train_balanced,
-    family = binomial
-  )
-  cv = cv.glm(data_train_balanced, model, K = 10)
-  cv_error_model4[s]  =  cv$delta[1]
+for(i in 1:k){
+  test_idx = podskupovi[[i]]
+  train_idx = setdiff(1:nrow(data_train_balanced), test_idx)
+  
+  model_multinom = multinom(Diabetes_012 ~ BMI * HealthScore + Stroke + DiffWalk + CardioRiskScore +
+                               LifestyleRiskScore + SocioEconomicStatus + AgeCat,
+                             data = data_train_balanced[train_idx, ], trace = FALSE)
+  
+  preds = predict(model_multinom, newdata = data_train_balanced[test_idx, ])
+  cv_error_multinom_model2[i] = mean(preds != data_train_balanced$Diabetes_012[test_idx])
 }
+
+
+for (s in stepen) {
+  cv_error_multinom_modelS = numeric(k)
+  
+  for(i in 1:k){
+    test_idx = podskupovi[[i]]
+    train_idx = setdiff(1:nrow(data_train_balanced), test_idx)
+    
+    model_multinom = multinom(Diabetes_012 ~ poly(BMI, s) + Stroke + DiffWalk + CardioRiskScore +
+                                 LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat,
+                               data = data_train_balanced[train_idx, ], trace = FALSE)
+    
+    preds = predict(model_multinom, newdata = data_train_balanced[test_idx, ])
+    cv_error_multinom_modelS[i] =  mean(preds != data_train_balanced$Diabetes_012[test_idx])
+  }
+  cv_error_multinom_model3_mean[s] = mean(cv_error_multinom_modelS)
+}
+
+for (s in stepen) {
+  cv_error_multinom_modelS = numeric(k)
+  
+  for(i in 1:k){
+    test_idx = podskupovi[[i]]
+    train_idx = setdiff(1:nrow(data_train_balanced), test_idx)
+    
+    model_multinom = multinom(Diabetes_012 ~ poly(BMI, s)*HealthScore + Stroke + DiffWalk + CardioRiskScore +
+                                LifestyleRiskScore  + SocioEconomicStatus + AgeCat,
+                              data = data_train_balanced[train_idx, ], trace = FALSE)
+    
+    preds = predict(model_multinom, newdata = data_train_balanced[test_idx, ])
+    cv_error_multinom_modelS[i] =  mean(preds != data_train_balanced$Diabetes_012[test_idx])
+  }
+  cv_error_multinom_model4_mean[s] = mean(cv_error_multinom_modelS)
+}
+
 cv_rezultati_logisticka = data.frame(
   Model = c(
     "Model 1: linearni",
@@ -2095,18 +2125,13 @@ cv_rezultati_logisticka = data.frame(
     paste0("Model 4: poly(BMI,", stepen, ") × HealthScore")
   ),
   CV_Error = c(
-    cv_error_model1,
-    cv_error_model2,
-    cv_error_model3,
-    cv_error_model4
-  )
+    mean(cv_error_multinom_model1),
+    mean(cv_error_multinom_model2),
+    cv_error_multinom_model3_mean,
+    cv_error_multinom_model4_mean)
 )
 print(cv_rezultati_logisticka)
-
-k = 10
-podskupovi <- createFolds(data_train_balanced$Diabetes_012, k = k, list = TRUE, returnTrain = FALSE)
-cv_error_cart <- numeric(k)
-cv_error_rf <- numeric(k)
+cv_rezultati_logisticka$Model[cv_rezultati_logisticka$CV_Error == min(cv_rezultati_logisticka$CV_Error)]
 
 for(i in 1:k){
   test_idx <- podskupovi[[i]]
@@ -2148,10 +2173,10 @@ results_rf_cart <- data.frame(
 results_rf_cart
 
 #Finalno treniranje####
-lr_model=Diabetes_012 ~ poly(BMI, 4) + Stroke + DiffWalk + CardioRiskScore + LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat
-lr_model = glm( Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore + LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat,   data = data_train_balanced,  family = binomial )
-summary(lr_model)
+lr_model_function = Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore + LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat
+lr_model <- multinom(lr_model_function, data = data_train_balanced, trace = FALSE)
 
+summary(lr_model)
 
 cart_model <- rpart(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore + 
                       LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat, 
@@ -2167,24 +2192,21 @@ rf_model<-randomForest(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore 
 print(rf_model$confusion)
 
 #Predikcija i metrike####
+
 lm_preds <- predict(lr_model, newdata = data_test)
 cart_preds <- predict(cart_model, newdata = data_test, type = "class")
 rf_preds <- predict(rf_model, newdata = data_test)
 
 nivoi <- levels(as.factor(data_test$Diabetes_012))
+
 stvarni_f <- factor(data_test$Diabetes_012, levels = nivoi)
 cart_f    <- factor(cart_preds,             levels = nivoi)
 rf_f      <- factor(rf_preds,               levels = nivoi)
 
-
-glm_preds_zaokruzeno <- round(lm_preds)
-glm_preds_zaokruzeno[glm_preds_zaokruzeno < 0] <- 0
-glm_preds_zaokruzeno[glm_preds_zaokruzeno > 2] <- 2
-glm_f <- factor(nivoi[glm_preds_zaokruzeno + 1], levels = nivoi)
-
-
+lm_f <- factor(lm_preds,  levels = nivoi)
+                
 finalna_tabela <- rbind(
-  izvuci_sve_metrike(glm_f, stvarni_f, "Logisticka Regresija"),
+  izvuci_sve_metrike(lm_f, stvarni_f, "Logisticka Regresija"),
   izvuci_sve_metrike(cart_f, stvarni_f, "Stablo (CART)"),
   izvuci_sve_metrike(rf_f, stvarni_f, "Random Forest")
 )
