@@ -1294,16 +1294,44 @@ data %>%
 chi_sq_test(data$HeartDiseaseorAttack,data$HighChol)
 cramer_v(data$HeartDiseaseorAttack,data$HighChol)
 library(ggplot2)
-ggplot(data,aes(x=Age,y=BMI))+geom_point()
+ggplot(data, aes(x = as.factor(Age), y = BMI, fill = as.factor(Age))) +
+  geom_boxplot(outlier.size = 0.5, alpha = 0.7) +
+  labs(title = "Distribucija BMI vrednosti po starosnim grupama",
+       x = "Starosna grupa (Age)",
+       y = "BMI",
+       fill="Starosna grupa")
 pearson_funkcija(data$Age,data$BMI)
 
-ggplot(data,aes(x=PhysHlth,y=BMI))+geom_point()
+ggplot(data, aes(x = as.factor(PhysHlth), y = BMI, fill = as.factor(PhysHlth))) +
+  geom_boxplot(outlier.size = 0.5, alpha = 0.7) +
+  labs(title = "Distribucija BMI vrednosti po danima sa fizičkim poteškoćama",
+       x = "Broj dana sa poškošćama ",
+       y = "BMI",
+       fill="Broj dana")
+
+
 pearson_funkcija(data$PhysHlth,data$BMI)
 
-ggplot(data,aes(x=MentHlth,y=BMI))+geom_point()
+
+
+ggplot(data, aes(x = as.factor(MentHlth), y = BMI, fill = as.factor(MentHlth))) +
+  geom_boxplot(outlier.size = 0.5, alpha = 0.7) +
+  labs(title = "Distribucija BMI vrednosti po danima sa mentalnim poteškoćama",
+       x = "Broj dana sa poškošćama ",
+       y = "BMI",
+       fill="Broj dana")
+
 pearson_funkcija(data$MentHlth,data$BMI)
 
 ggplot(data,aes(x=Age,y=PhysHlth))+geom_point()
+
+ggplot(data, aes(x = as.factor(PhysHlth), y = Age, fill = as.factor(PhysHlth))) +
+  geom_boxplot(outlier.size = 0.5, alpha = 0.7) +
+  labs(title = "Distribucija starosnih grupa po danima sa fizičkim poteškoćama",
+       x = "Broj dana sa poškošćama ",
+       y = "Age",
+       fill="Broj dana")
+
 pearson_funkcija(data$Age,data$PhysHlth)
 
 #Ciscenje podataka#############
