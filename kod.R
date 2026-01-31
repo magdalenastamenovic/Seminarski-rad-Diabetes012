@@ -1070,6 +1070,13 @@ ggplot(data, aes(x = Diabetes_012, fill =Income )) +
        y = "Broj opservacija",
        fill = "Primanja")
 
+ggplot(data, aes(x = Diabetes_012, y = as.numeric(Income), fill = Diabetes_012)) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_manual(values = colorS) +
+  labs(title = "Distribucija primanja po tipu dijabetesa",
+       y = "Nivo primanja (numerička skala)")
+
+
 data %>%
   count(Diabetes_012, Income) %>%
   group_by(Diabetes_012) %>%
@@ -1098,6 +1105,13 @@ ggplot(data, aes(x = Education, fill =Income )) +
   labs(title = "Distribucija nivoa primanja u odnosu na nivo obrazovanje",
        y = "Broj opservacija",
        fill = "Primanja")
+
+ggplot(data, aes(x = Education, y = as.numeric(Income), fill = Education)) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_manual(values = colorS) +
+  labs(title = "Distribucija primanja po nivou obrazovanja",
+       x = "Nivo obrazovanja",
+       y = "Nivo primanja (numerička skala)") 
 
 data %>%
   count(Education, Income) %>%
