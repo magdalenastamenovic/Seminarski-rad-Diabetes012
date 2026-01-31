@@ -2,7 +2,7 @@
 Seminarskim radom analizirali smo skup podataka skup podataka Diabetes 012 – Health Indicators (BRFSS 2015) koji predstavlja veliki statistički skup zdravstvenih parametara prikupljenih u okviru istraživačkog programa u Sjedinjenim Američkim Državama. Nakon analize napravljen je model za predikciju promenljive Diabetes_012 (dijabetes), uz analizu faktora koji utiču na pojavu dijabetesa.
 
 ## Materijal
-- [link text](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset?resource=download)****: Link do sajta gde smo preuzeli skup podataka.  
+- [Koggle strana skupa podataka](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset?resource=download): Link do sajta gde smo preuzeli skup podataka.  
 - [diabetes_012_health_indicators_B.csv](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset?resource=download&select=diabetes_012_health_indicators_BRFSS2015.csv): Fajl skupa podataka na sajtu.
 - diabetes_dataset.csv: Preuzet skup podataka.
 - README.md: Fajl na kome je napisan ovaj opis.  
