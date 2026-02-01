@@ -67,7 +67,8 @@ Imamo sledeće kolone:
 - **Logistička Regresija**
 - **Classification and Regression Trees (CART)**
 - **Random Forest**
-Metrike su pokazale da je Random FOrest naefikasniji od ova tri modela, prušajući najbolji balans izmedju preciznosti i osetljivosti.
+
+Metrike su pokazale da je Random Forest naefikasniji od ova tri modela, pružajući najbolji balans izmedju preciznosti i osetljivosti.
 
 ## Zaključak
 Analiza je pokazala da na pojavu bolesti dijabetesa ili predijabetičkog stanja najviše utiču gojaznost, srčane bolesti.
