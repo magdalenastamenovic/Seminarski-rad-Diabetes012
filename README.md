@@ -3,14 +3,14 @@ Seminarskim radom analizirali smo skup podataka skup podataka Diabetes 012 – H
 
 ## Materijal
 - [Koggle strana skupa podataka](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset?resource=download): Link do sajta gde smo preuzeli skup podataka.  
-- [diabetes_012_health_indicators_B.csv](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset?resource=download&select=diabetes_012_health_indicators_BRFSS2015.csv): Fajl skupa podataka na sajtu.
+- [diabetes_012_health_indicators_BRFSS2015.csv](https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset?resource=download&select=diabetes_012_health_indicators_BRFSS2015.csv): Fajl skupa podataka na sajtu.
 - diabetes_dataset.csv: Preuzet skup podataka.
 - README.md: Fajl na kome je napisan ovaj opis.  
 - kod.R: R skripta sa kodom struktuirana po blokovima.
 - Семинарски рад.docx: Word dokument sa opisima, graficima i tumačenjima istih.
 - Семинарски рад.pdf: Pdf dokument sa opisima, graficima i tumačenjima istih.
-- Seminarski rad - kod sa izvrsavanjima.html: R-markdown sa celokupnim izvršavanjem koda
-- Seminarski rad - kod sa izvrsavanjima.pdf: PDF dokument R-markdown-a sa celokupnim izvršavanjem koda
+- Seminarski rad - kod sa izvrsavanjima.html: HTML prikaz R-markdown fajla sa celokupnim izvršavanjem koda
+- Seminarski rad - kod sa izvrsavanjima.Rmd: R-markdown sa celokupnim izvršavanjem koda
 
 ## Skup Podataka
 Ovaj skup podataka sadrži informacije o zdravstvenim navikama, prisustvu hroničnih bolesti, fizičkoj aktivnosti, ishrani, demografskim obeležjima i opštem zdravstvenom stanju.
