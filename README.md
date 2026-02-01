@@ -9,7 +9,8 @@ Seminarskim radom analizirali smo skup podataka skup podataka Diabetes 012 – H
 - kod.R: R skripta sa kodom struktuirana po blokovima.
 - Семинарски рад.docx: Word dokument sa opisima, graficima i tumačenjima istih.
 - Семинарски рад.pdf: Pdf dokument sa opisima, graficima i tumačenjima istih.
-- (biće naknadno dodat): R-markdown sa celokupnim izvršavanjem koda
+- Seminarski rad - kod sa izvrsavanjima.html: R-markdown sa celokupnim izvršavanjem koda
+- Seminarski rad - kod sa izvrsavanjima.pdf: PDF dokument R-markdown-a sa celokupnim izvršavanjem koda
 
 ## Skup Podataka
 Ovaj skup podataka sadrži informacije o zdravstvenim navikama, prisustvu hroničnih bolesti, fizičkoj aktivnosti, ishrani, demografskim obeležjima i opštem zdravstvenom stanju.
