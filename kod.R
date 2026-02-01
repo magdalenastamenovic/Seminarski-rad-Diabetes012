@@ -6,11 +6,11 @@
 #'     toc: true
 #'     theme: flatly
 #' ---
-#' ##Instalacija paketa
+#' Instalacija paketa
 #install.packages("caret", dependencies = TRUE)
 #install.packages("paletteer")
 #install.packages("rpart.plot")
-#' ##Potrebne biblioteke
+#' Potrebne biblioteke
 library(ggplot2)
 library(paletteer)
 library(dplyr)
@@ -21,7 +21,7 @@ library(randomForest)
 library(boot)
 library(rpart.plot)
 colorS = c("#88A0DCFF", "#381A61FF", "#7C4B73FF", "#ED968CFF", "#AB3329FF", "#E78429FF", "#F9D14AFF","#73652DFF")
-#' ##Funkcije
+#' Funkcije
 cramer_v <- function(var1, var2) {
   tabela <- table(var1, var2)
   chi2 <- chisq.test(tabela)$statistic
@@ -66,21 +66,21 @@ izvuci_sve_metrike <- function(pred, stvarni, ime_modela) {
   return(izvestaj)
 }
 
-#' ##Učitavanje podataka
+#' Učitavanje podataka
 radni_direktorijum <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(radni_direktorijum)
 cat("Radni direktorijum je postavljen na:", getwd(), "\n")
 
 data <- read.csv("diabetes_dataset.csv")
 cat("Skup podataka mozete pogledati u promenljivoj data koja se automatski otvorila u radnom okruzenju", View(data))
-#' ##Osnovne informacije o skupu
+#' Osnovne informacije o skupu
 dimenzije_skupa = dim(data)
 cat("Broj featura skupa: ", dimenzije_skupa[2], "\n", "Broj opservacija: ", dimenzije_skupa[1])
 
 str(data)
 summary(data)
 
-#' ##Pripreme za EDA
+#' Pripreme za EDA
 
 daNe_kategorije = c("HighBP", "HighChol", "CholCheck", "Smoker", "Stroke", 
                  "HeartDiseaseorAttack", "PhysActivity", "Fruits", "Veggies",
@@ -125,7 +125,7 @@ data$Education<- factor(data$Education, levels = nivoi_Education,
                                 "4-god fakultet"))
 str(data)
 
-#' ##Univarijantna
+#' Univarijantna
 
 ggplot(data, aes(x = Diabetes_012, fill = Diabetes_012)) +
       geom_bar() +
@@ -325,7 +325,7 @@ ggplot(data, aes(x = Education, fill = Education)) +
         axis.text.x  = element_blank())
 
 
-#' ##Bivarijanta
+#' Bivarijanta
 ggplot(data, aes(x = Diabetes_012, fill = HighBP))  +
   geom_bar(position = "dodge") +
   labs(
@@ -1342,7 +1342,7 @@ ggplot(data, aes(x = as.factor(PhysHlth), y = Age, fill = as.factor(PhysHlth))) 
 
 pearson_funkcija(data$Age,data$PhysHlth)
 
-#' ##Čišćenje podataka
+#' Čišćenje podataka
 
 data_clean <- data[data$BMI >= 12 & data$BMI <= 70, ]
 
@@ -1351,13 +1351,13 @@ print(data.frame(
   Broj_opservacija = c(nrow(data), nrow(data_clean))
 ))
 
-#' ##Transformacija podataka
+#' Transformacija podataka
 
 nivoi_Age = sort(unique(data_clean$Age))
 data_clean$Age = factor(data_clean$Age, levels = nivoi_Age, ordered = TRUE)
 str(data_clean$Age)
 
-#' ##Feature Engeenering
+#' Feature Engeenering
 category_physHlth = c("nema problema", "blagi problemi", "umereni problemi", "teski problemi")
 interval_physHlth = c(0, 5, 15, 30)
 data_clean$PhysHlthCat = NA
@@ -1554,7 +1554,7 @@ ggplot(data_clean, aes(x = SocioEconomicStatus, fill = SocioEconomicStatus)) +
   ) +
   scale_fill_paletteer_d("MetBrewer::Archambault") + theme(legend.position="none")
 
-#' ##Bivarijantna analiza transformisanih
+#' Bivarijantna analiza transformisanih
 ggplot(data_clean, aes(x = PhysHlthCat, fill = Diabetes_012 ))  +
   geom_bar(position = "dodge") +
   labs(
@@ -1976,7 +1976,7 @@ data_clean %>%
 chi_sq_test(data_clean$AgeCat,data_clean$HealthScore) 
 cramer_v(data_clean$AgeCat,data_clean$HealthScore) 
 
-#' ##Feature Selection
+#' Feature Selection
 
 dim(data_clean)
 names(data_clean)
@@ -1988,7 +1988,7 @@ selected_features <- c("BMI", "Stroke", "DiffWalk", "CardioRiskScore",
 data_selected <- data_clean[, selected_features]
 dim(data_selected)
 
-#' ##Test/Train split
+#' Test/Train split
 raspodela_Diabetes_012 = data_selected %>%
                           count(Diabetes_012) %>%
                           mutate(Udeo = round(n / sum(n) * 100, 2))
@@ -2028,7 +2028,7 @@ ggplot(raspodela_tabele, aes(x = Diabetes_012, y = Udeo, fill = Skup)) +
     y = "Procenat (%)",
     x = "Diabetes_012"
   ) + scale_fill_paletteer_d("MetBrewer::Archambault")
-#Balansirnje####
+#' Balansirnje
 
 print(raspodela_trening)
 
@@ -2180,7 +2180,7 @@ results_rf_cart <- data.frame(
 )
 results_rf_cart
 
-#' ##Finalno treniranje
+#' Finalno treniranje
 lr_model_function = Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore + LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat
 lr_model <- multinom(lr_model_function, data = data_train_balanced, trace = FALSE)
 
@@ -2199,7 +2199,7 @@ rf_model<-randomForest(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore 
                        importance = TRUE)
 print(rf_model$confusion)
 
-#' ##Predikcija i metrike
+#' Predikcija i metrike
 
 lm_preds <- predict(lr_model, newdata = data_test)
 cart_preds <- predict(cart_model, newdata = data_test, type = "class")
