@@ -9,6 +9,7 @@ Seminarskim radom analizirali smo skup podataka skup podataka Diabetes 012 – H
 - kod.R: R skripta sa kodom struktuirana po blokovima.
 - Семинарски рад.docx: Word dokument sa opisima, graficima i tumačenjima istih.
 - Семинарски рад.pdf: Pdf dokument sa opisima, graficima i tumačenjima istih.
+- Семинарски рад - FINALNA: word i PDF finalna dokumentacija
 - Seminarski rad - kod sa izvrsavanjima.html: HTML prikaz R-markdown fajla sa celokupnim izvršavanjem koda
 - Seminarski rad - kod sa izvrsavanjima.Rmd: R-markdown sa celokupnim izvršavanjem koda
 
