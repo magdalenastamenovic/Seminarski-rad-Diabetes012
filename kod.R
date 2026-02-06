@@ -7,9 +7,14 @@
 #'     theme: flatly
 #' ---
 #' Instalacija paketa
-#install.packages("caret", dependencies = TRUE)
-#install.packages("paletteer")
-#install.packages("rpart.plot")
+install.packages("ggplot2", dependencies = TRUE)
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("caret", dependencies = TRUE)
+install.packages("paletteer")
+install.packages("rpart.plot")
+install.packages("randomForest")
+install.packages("boot")
 #' Potrebne biblioteke
 library(ggplot2)
 library(paletteer)
@@ -1989,6 +1994,10 @@ data_selected <- data_clean[, selected_features]
 dim(data_selected)
 
 #' Test/Train split
+data_selected$Diabetes_012 <- factor( data_selected$Diabetes_012,
+                              levels = c("nema dijabetes", "predijabetes", "dijabetes"),
+                              labels = c("nemaDijabetes", "predijabetes", "dijabetes")
+)
 raspodela_Diabetes_012 = data_selected %>%
                           count(Diabetes_012) %>%
                           mutate(Udeo = round(n / sum(n) * 100, 2))
@@ -2034,7 +2043,7 @@ print(raspodela_trening)
 
 predijabetes = subset(data_train, Diabetes_012 == "predijabetes")
 dijabetes = subset(data_train, Diabetes_012 == "dijabetes")
-nemadijabetes = subset(data_train, Diabetes_012 == "nema dijabetes")
+nemadijabetes = subset(data_train, Diabetes_012 == "nemaDijabetes")
 set.seed(83762021)
 
 predijabetes_oversampling = predijabetes[sample(nrow(predijabetes), 15000, replace = TRUE), ]
@@ -2050,96 +2059,165 @@ raspodela_data_train_balanced = data_train_balanced %>%
 
 dim(data_train_balanced)
 #' ##Unakrsna validacija
+library(nnet)
+stepen = 2:4
+cv_rezultati <- data.frame(
+  Model = character(),
+  Accuracy = numeric(),
+  Mean_Balanced_Accuracy = numeric(),
+  Mean_Recall = numeric(),
+  Mean_F1 = numeric(),
+  stringsAsFactors = FALSE
+)
+k = 10
+podskupovi = createFolds(data_train_balanced$Diabetes_012, k=k, list=TRUE, returnTrain=FALSE)
+cv_error_cart <- numeric(k)
+cv_error_rf <- numeric(k)
+
+cv_metrics <- matrix(NA, nrow = k, ncol = 4)
+colnames(cv_metrics) <- c(
+  "Accuracy",
+  "Mean_Balanced_Accuracy",
+  "Mean_Recall",
+  "Mean_F1"
+)
 
 set.seed(83762021)
-library(nnet)
-k = 10
-podskupovi = createFolds(data_train_balanced$Diabetes_012, k = k, list = TRUE, returnTrain = FALSE)
 
-cv_error_multinom_model1 = numeric(k)
-cv_error_multinom_model2 = numeric(k)
 
-stepen = 1:4
-cv_error_multinom_model3_mean = numeric(length(stepen))
-cv_error_multinom_model4_mean = numeric(length(stepen))
+compute_metrics <- function(pred, true) {
+  cm <- confusionMatrix(factor(pred), factor(true))
+  
+  accuracy <- cm$overall["Accuracy"]
+  
+  recall <- mean(cm$byClass[, "Sensitivity"], na.rm = TRUE)
+  
+  
+  f1 <- mean( 2 * (cm$byClass[, "Sensitivity"] * cm$byClass[, "Pos Pred Value"]) /
+                (cm$byClass[, "Sensitivity"] + cm$byClass[, "Pos Pred Value"]),
+              na.rm = TRUE
+  )
+  
+  balanced_accuracy <- mean(cm$byClass[, "Balanced Accuracy"], na.rm = TRUE)
+  
+  c(Accuracy = accuracy,
+    Mean_Recall = recall,
+    Mean_Balanced_Accuracy = balanced_accuracy,
+    Mean_F1 = f1
+  )
+}
 
-cv_error_cart = numeric(k)
-cv_error_rf = numeric(k)
+
 
 for(i in 1:k){
-  test_idx = podskupovi[[i]]
-  train_idx = setdiff(1:nrow(data_train_balanced), test_idx)
-
-  model_multinom = multinom(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore +
-                               LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat,
-                             data = data_train_balanced[train_idx, ], trace = FALSE)
+  test_idx <- podskupovi[[i]]
+  train_idx <- setdiff(1:nrow(data_train_balanced), test_idx)
   
-  preds = predict(model_multinom, newdata = data_train_balanced[test_idx, ])
-  cv_error_multinom_model1[i] = mean(preds != data_train_balanced$Diabetes_012[test_idx])
+  model_multinom1 <- multinom(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore +
+                        LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat,
+                      data = data_train_balanced[train_idx, ], method = "class", trace=FALSE)
+  
+  preds <- predict(model_multinom1, data_train_balanced[test_idx, ], type = "class")
+  
+  cv_metrics[i, ] = compute_metrics(
+    preds,
+    data_train_balanced$Diabetes_012[test_idx]
+  )
 }
+
+rez = colMeans(cv_metrics, na.rm = TRUE)
+cv_rezultati <- cv_rezultati %>%
+  add_row(
+    Model = "Model 1: linearn",
+    Accuracy = rez["Accuracy"],
+    Mean_Balanced_Accuracy = rez["Mean_Balanced_Accuracy"],
+    Mean_Recall = rez["Mean_Recall"],
+    Mean_F1 = rez["Mean_F1"]
+  )
 
 for(i in 1:k){
-  test_idx = podskupovi[[i]]
-  train_idx = setdiff(1:nrow(data_train_balanced), test_idx)
+  test_idx <- podskupovi[[i]]
+  train_idx <- setdiff(1:nrow(data_train_balanced), test_idx)
   
-  model_multinom = multinom(Diabetes_012 ~ BMI * HealthScore + Stroke + DiffWalk + CardioRiskScore +
-                               LifestyleRiskScore + SocioEconomicStatus + AgeCat,
-                             data = data_train_balanced[train_idx, ], trace = FALSE)
+  model_multinom2 <- multinom(Diabetes_012 ~ BMI * HealthScore + Stroke + DiffWalk + CardioRiskScore +
+                                LifestyleRiskScore + SocioEconomicStatus + AgeCat,
+                              data = data_train_balanced[train_idx, ], method = "class", trace=FALSE)
   
-  preds = predict(model_multinom, newdata = data_train_balanced[test_idx, ])
-  cv_error_multinom_model2[i] = mean(preds != data_train_balanced$Diabetes_012[test_idx])
+  preds <- predict(model_multinom2, data_train_balanced[test_idx, ], type = "class")
+  
+  cv_metrics[i, ] = compute_metrics(
+    preds,
+    data_train_balanced$Diabetes_012[test_idx]
+  )
 }
 
+rez = colMeans(cv_metrics, na.rm = TRUE)
+cv_rezultati <- cv_rezultati %>%
+  add_row(
+    Model = "Model 2: BMI * HealthScore",
+    Accuracy = rez["Accuracy"],
+    Mean_Balanced_Accuracy = rez["Mean_Balanced_Accuracy"],
+    Mean_Recall = rez["Mean_Recall"],
+    Mean_F1 = rez["Mean_F1"]
+  )
 
 for (s in stepen) {
-  cv_error_multinom_modelS = numeric(k)
-  
   for(i in 1:k){
-    test_idx = podskupovi[[i]]
-    train_idx = setdiff(1:nrow(data_train_balanced), test_idx)
+    test_idx <- podskupovi[[i]]
+    train_idx <- setdiff(1:nrow(data_train_balanced), test_idx)
     
-    model_multinom = multinom(Diabetes_012 ~ poly(BMI, s) + Stroke + DiffWalk + CardioRiskScore +
-                                 LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat,
-                               data = data_train_balanced[train_idx, ], trace = FALSE)
+    model_multinom <- multinom(Diabetes_012 ~ poly(BMI, s) + HealthScore + Stroke + DiffWalk + CardioRiskScore +
+                                  LifestyleRiskScore + SocioEconomicStatus + AgeCat,
+                                data = data_train_balanced[train_idx, ], method = "class", trace=FALSE)
     
-    preds = predict(model_multinom, newdata = data_train_balanced[test_idx, ])
-    cv_error_multinom_modelS[i] =  mean(preds != data_train_balanced$Diabetes_012[test_idx])
+    preds <- predict(model_multinom, data_train_balanced[test_idx, ], type = "class")
+    
+    cv_metrics[i, ] = compute_metrics(
+      preds,
+      data_train_balanced$Diabetes_012[test_idx]
+    )
   }
-  cv_error_multinom_model3_mean[s] = mean(cv_error_multinom_modelS)
+  
+  rez = colMeans(cv_metrics, na.rm = TRUE)
+  cv_rezultati <- cv_rezultati %>%
+    add_row(
+      Model = paste0("Model 3: poly(BMI,", s, ")"),
+      Accuracy = rez["Accuracy"],
+      Mean_Balanced_Accuracy = rez["Mean_Balanced_Accuracy"],
+      Mean_Recall = rez["Mean_Recall"],
+      Mean_F1 = rez["Mean_F1"]
+    )
 }
 
 for (s in stepen) {
-  cv_error_multinom_modelS = numeric(k)
-  
   for(i in 1:k){
-    test_idx = podskupovi[[i]]
-    train_idx = setdiff(1:nrow(data_train_balanced), test_idx)
+    test_idx <- podskupovi[[i]]
+    train_idx <- setdiff(1:nrow(data_train_balanced), test_idx)
     
-    model_multinom = multinom(Diabetes_012 ~ poly(BMI, s)*HealthScore + Stroke + DiffWalk + CardioRiskScore +
-                                LifestyleRiskScore  + SocioEconomicStatus + AgeCat,
-                              data = data_train_balanced[train_idx, ], trace = FALSE)
+    model_multinom <- multinom(Diabetes_012 ~ poly(BMI, s)*HealthScore + Stroke + DiffWalk + CardioRiskScore +
+                                 LifestyleRiskScore + SocioEconomicStatus + AgeCat,
+                               data = data_train_balanced[train_idx, ], method = "class", trace=FALSE)
     
-    preds = predict(model_multinom, newdata = data_train_balanced[test_idx, ])
-    cv_error_multinom_modelS[i] =  mean(preds != data_train_balanced$Diabetes_012[test_idx])
+    preds <- predict(model_multinom, data_train_balanced[test_idx, ], type = "class")
+    
+    cv_metrics[i, ] = compute_metrics(
+      preds,
+      data_train_balanced$Diabetes_012[test_idx]
+    )
   }
-  cv_error_multinom_model4_mean[s] = mean(cv_error_multinom_modelS)
+  
+  rez = colMeans(cv_metrics, na.rm = TRUE)
+  cv_rezultati <- cv_rezultati %>%
+    add_row(
+      Model = paste0("Model 4: poly(BMI,", s, ")*HealthScore"),
+      Accuracy = rez["Accuracy"],
+      Mean_Balanced_Accuracy = rez["Mean_Balanced_Accuracy"],
+      Mean_Recall = rez["Mean_Recall"],
+      Mean_F1 = rez["Mean_F1"]
+    )
 }
 
-cv_rezultati_logisticka = data.frame(
-  Model = c(
-    "Model 1: linearni",
-    "Model 2: BMI × HealthScore",
-    paste0("Model 3: poly(BMI,", stepen, ")"),
-    paste0("Model 4: poly(BMI,", stepen, ") × HealthScore")
-  ),
-  CV_Error = c(
-    mean(cv_error_multinom_model1),
-    mean(cv_error_multinom_model2),
-    cv_error_multinom_model3_mean,
-    cv_error_multinom_model4_mean)
-)
-print(cv_rezultati_logisticka)
-cv_rezultati_logisticka$Model[cv_rezultati_logisticka$CV_Error == min(cv_rezultati_logisticka$CV_Error)]
+
 
 for(i in 1:k){
   test_idx <- podskupovi[[i]]
@@ -2150,11 +2228,22 @@ for(i in 1:k){
                       data = data_train_balanced[train_idx, ], method = "class")
   
   preds <- predict(model_cart, data_train_balanced[test_idx, ], type = "class")
-  cv_error_cart[i] <- mean(preds != data_train_balanced$Diabetes_012[test_idx])
+  
+  cv_metrics[i, ] = compute_metrics(
+    preds,
+    data_train_balanced$Diabetes_012[test_idx]
+  )
 }
 
-
-
+rez = colMeans(cv_metrics, na.rm = TRUE)
+cv_rezultati <- cv_rezultati %>%
+  add_row(
+    Model = "Model CART",
+    Accuracy = rez["Accuracy"],
+    Mean_Balanced_Accuracy = rez["Mean_Balanced_Accuracy"],
+    Mean_Recall = rez["Mean_Recall"],
+    Mean_F1 = rez["Mean_F1"]
+  )
 
 for(i in 1:k){
   test_idx <- podskupovi[[i]]
@@ -2166,22 +2255,27 @@ for(i in 1:k){
                            ntree = 500)
   
   preds <- predict(model_rf, data_train_balanced[test_idx, ])
-  cv_error_rf[i] <- mean(preds != data_train_balanced$Diabetes_012[test_idx])
+  cv_metrics[i, ] = compute_metrics(
+    preds,
+    data_train_balanced$Diabetes_012[test_idx]
+  )
 }
 
-
-mean_cv_error_cart <- mean(cv_error_cart)
-mean_cv_error_rf <- mean(cv_error_rf)
-
-
-results_rf_cart <- data.frame(
-  Model = c("CART", "Random Forest"),
-  CV_Error = c(mean_cv_error_cart, mean_cv_error_rf)
-)
-results_rf_cart
+rez = colMeans(cv_metrics, na.rm = TRUE)
+cv_rezultati <- cv_rezultati %>%
+  add_row(
+    Model = "Model Random Forest",
+    Accuracy = rez["Accuracy"],
+    Mean_Balanced_Accuracy = rez["Mean_Balanced_Accuracy"],
+    Mean_Recall = rez["Mean_Recall"],
+    Mean_F1 = rez["Mean_F1"]
+  )
+cv_rezultati %>%
+filter(Model %in% c("Model 2: BMI * HealthScore", "Model CART", "Model Random Forest"))
 
 #' Finalno treniranje
-lr_model_function = Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore + LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat
+
+lr_model_function = Diabetes_012 ~ BMI*HealthScore+ Stroke + DiffWalk + CardioRiskScore + LifestyleRiskScore + SocioEconomicStatus + AgeCat
 lr_model <- multinom(lr_model_function, data = data_train_balanced, trace = FALSE)
 
 summary(lr_model)
@@ -2197,7 +2291,6 @@ rf_model<-randomForest(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore 
                        data = data_train_balanced, 
                        ntree = 500,
                        importance = TRUE)
-print(rf_model$confusion)
 
 #' Predikcija i metrike
 
