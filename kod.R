@@ -1990,7 +1990,7 @@ selected_features <- c("BMI", "Stroke", "DiffWalk", "CardioRiskScore",
                        "LifestyleRiskScore", "HealthScore", 
                        "SocioEconomicStatus", "AgeCat", "Diabetes_012")
 
-data_selected <- data_clean[, selected_features]
+data_selected <- data_clean[]
 dim(data_selected)
 
 #' Test/Train split
@@ -2058,6 +2058,25 @@ raspodela_data_train_balanced = data_train_balanced %>%
   mutate(Udeo = round(n / sum(n) * 100, 2))
 
 dim(data_train_balanced)
+#'Validacija izbora karakteristika upotrebom rf-a
+rf_full_model <- randomForest(Diabetes_012 ~ ., 
+                              data = data_train_balanced, 
+                              ntree = 500, 
+                              importance = TRUE)
+varImpPlot(rf_full_model, 
+           main = "Značajnost svih varijabli iz data_clean",
+           color = "darkblue",
+           pch = 19)
+
+importance_df <- as.data.frame(importance(rf_full_model))
+importance_df$Feature <- rownames(importance_df)
+importance_df <- importance_df %>% arrange(desc(MeanDecreaseGini))
+
+print("Top 10 najbitnijih varijabli:")
+head(importance_df[, c("Feature", "MeanDecreaseGini")], 10)
+
+data_train_balanced=data_train_balanced[,selected_features]
+data_test=data_test[,selected_features]
 #' ##Unakrsna validacija
 library(nnet)
 stepen = 2:4
