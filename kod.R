@@ -7,14 +7,14 @@
 #'     theme: flatly
 #' ---
 #' Instalacija paketa
-install.packages("ggplot2", dependencies = TRUE)
-install.packages("dplyr")
-install.packages("tidyr")
-install.packages("caret", dependencies = TRUE)
-install.packages("paletteer")
-install.packages("rpart.plot")
-install.packages("randomForest")
-install.packages("boot")
+#install.packages("ggplot2", dependencies = TRUE)
+#install.packages("dplyr")
+#install.packages("tidyr")
+#install.packages("caret", dependencies = TRUE)
+#install.packages("paletteer")
+#install.packages("rpart.plot")
+#install.packages("randomForest")
+#install.packages("boot")
 #' Potrebne biblioteke
 library(ggplot2)
 library(paletteer)
@@ -25,6 +25,7 @@ library(rpart)
 library(randomForest)
 library(boot)
 library(rpart.plot)
+library(nnet)
 colorS = c("#88A0DCFF", "#381A61FF", "#7C4B73FF", "#ED968CFF", "#AB3329FF", "#E78429FF", "#F9D14AFF","#73652DFF")
 #' Funkcije
 cramer_v <- function(var1, var2) {
@@ -72,9 +73,9 @@ izvuci_sve_metrike <- function(pred, stvarni, ime_modela) {
 }
 
 #' Učitavanje podataka
-radni_direktorijum <- dirname(rstudioapi::getActiveDocumentContext()$path)
-setwd(radni_direktorijum)
-cat("Radni direktorijum je postavljen na:", getwd(), "\n")
+#radni_direktorijum <- dirname(rstudioapi::getActiveDocumentContext()$path)
+#setwd(radni_direktorijum)
+#cat("Radni direktorijum je postavljen na:", getwd(), "\n")
 
 data <- read.csv("diabetes_dataset.csv")
 cat("Skup podataka mozete pogledati u promenljivoj data koja se automatski otvorila u radnom okruzenju", View(data))
@@ -2302,15 +2303,18 @@ summary(lr_model)
 cart_model <- rpart(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore + 
                       LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat, 
                     data = data_train_balanced, 
-                    method = "class")
+                    method = "class",
+                    control = rpart.control(cp = 0.001))
 
 rpart.plot(cart_model)
+
+
 rf_model<-randomForest(Diabetes_012 ~ BMI + Stroke + DiffWalk + CardioRiskScore + 
                          LifestyleRiskScore + HealthScore + SocioEconomicStatus + AgeCat, 
                        data = data_train_balanced, 
                        ntree = 500,
                        importance = TRUE)
-
+print(rf_model$confusion)
 #' Predikcija i metrike
 
 lm_preds <- predict(lr_model, newdata = data_test)
